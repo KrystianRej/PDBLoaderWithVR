@@ -40,8 +40,8 @@
 
         const fov = 75;
         const aspect = window.innerWidth / window.innerHeight;  // the canvas default
-        const near = 1;
-        const far = 5000;
+        const near = 0.00000001;
+        const far = 100;
         const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
         camera.position.set(0, 1.6, 5);
 
@@ -160,7 +160,7 @@
 
         loadMolecule( 'lib/molecules/caffeine.pdb' );
 
-        root.position.z = -1000;
+        root.position.z = -500;
 
 
 
