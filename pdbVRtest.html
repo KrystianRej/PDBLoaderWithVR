@@ -43,7 +43,7 @@
         const near = 1;
         const far = 5000;
         const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-        camera.position.set(0, 1.6, 2000);
+        camera.position.set(0, 1.6, 5);
 
         const scene = new THREE.Scene();
 
@@ -160,6 +160,9 @@
 
         loadMolecule( 'lib/molecules/caffeine.pdb' );
 
+        root.position.z = -1000;
+
+
 
         function resizeRendererToDisplaySize(renderer) {
             const canvas = renderer.domElement;
@@ -181,7 +184,7 @@
                 camera.updateProjectionMatrix();
             }
 
-            // root.rotation.x = time;
+            root.rotation.x = time;
             root.rotation.y = time * 0.7;
 
             renderer.render(scene, camera);
