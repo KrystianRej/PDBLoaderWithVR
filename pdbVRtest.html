@@ -14,16 +14,40 @@
             height: 100vh;
             display: block;
         }
+        #menu {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            padding: 0;
+            margin: 0;
+        }
+
+        button {
+            color: rgb(255,255,255);
+            background: transparent;
+            border: 0px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: rgba(0,255,255,0.5);
+        }
+        button:active {
+            color: #000000;
+            background-color: rgba(0,255,255,1);
+        }
+
     </style>
 </head>
 <body>
 <canvas id="c"></canvas>
+<div id="menu"></div>
 
 <script type="module">
 
     import * as THREE from './lib/three.module.js';
 
-    import { TrackballControls } from './lib/TrackballControls.js';
     import { PDBLoader } from './lib/PDBLoader.js';
     import { CSS2DRenderer, CSS2DObject } from './lib/CSS2DRenderer.js';
     import {VRButton} from './lib/vr/VRButton.js';
@@ -32,14 +56,38 @@
     var offset = new THREE.Vector3();
     var root;
 
+    var MOLECULES = {
+        "Ethanol": "ethanol.pdb",
+        "Aspirin": "aspirin.pdb",
+        "Caffeine": "caffeine.pdb",
+        "Nicotine": "nicotine.pdb",
+        "LSD": "lsd.pdb",
+        "Cocaine": "cocaine.pdb",
+        "Cholesterol": "cholesterol.pdb",
+        "Lycopene": "lycopene.pdb",
+        "Glucose": "glucose.pdb",
+        "Aluminium oxide": "Al2O3.pdb",
+        "Cubane": "cubane.pdb",
+        "Copper": "cu.pdb",
+        "Fluorite": "caf2.pdb",
+        "Salt": "nacl.pdb",
+        "YBCO superconductor": "ybco.pdb",
+        "Buckyball": "buckyball.pdb",
+        "Graphite": "graphite.pdb"
+    };
+
+    var menu = document.getElementById( 'menu' );
+
     function main() {
         const canvas = document.querySelector('#c');
         const renderer = new THREE.WebGLRenderer({canvas});
+
+        // create VR context
         renderer.xr.enabled = true;
         document.body.appendChild(VRButton.createButton(renderer));
 
         const fov = 75;
-        const aspect = window.innerWidth / window.innerHeight;  // the canvas default
+        const aspect = window.innerWidth / window.innerHeight;
         const near = 0.00000001;
         const far = 5000;
         const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
@@ -55,14 +103,36 @@
             scene.add(light);
         }
 
-        const boxWidth = 1;
-        const boxHeight = 1;
-        const boxDepth = 1;
-        const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
 
 
         root = new THREE.Group();
         scene.add( root );
+
+        function generateButtonCallback( url ) {
+
+            return function () {
+
+                loadMolecule( url );
+
+            };
+
+        }
+
+        function createMenu() {
+
+            for ( var m in MOLECULES ) {
+
+                var button = document.createElement( 'button' );
+                button.innerHTML = m;
+                menu.appendChild( button );
+
+                var url = 'lib/molecules/' + MOLECULES[ m ];
+
+                button.addEventListener( 'click', generateButtonCallback( url ), false );
+
+            }
+
+        }
 
         function loadMolecule( url ) {
 
@@ -159,8 +229,9 @@
         }
 
         loadMolecule( 'lib/molecules/caffeine.pdb' );
+        createMenu();
 
-        root.position.z = -200;
+        root.position.z = -600;
 
 
 
@@ -190,6 +261,7 @@
             renderer.render(scene, camera);
         }
 
+        // for VR this function instead normal requestAnimationFrame()
         renderer.setAnimationLoop(render);
     }
 
