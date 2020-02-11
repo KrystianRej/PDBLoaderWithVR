@@ -226,7 +226,7 @@
                 var box = new THREE.Box3().setFromObject(root);
                 var size = new THREE.Vector3();
                 box.getSize(size);
-                root.position.z = - size.z * 1.5;
+                root.position.z = - size.z;
                 console.log(size);
 
                 // render();
